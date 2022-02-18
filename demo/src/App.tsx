@@ -4,6 +4,8 @@ import './App.css'
 
 import {createSection, SectionDescriptor, sectionField} from "../../src/hooks/useSection";
 import {createTemplate} from "../../src/createTemplate";
+import {Text, Grid, Group, TextInput, Paper, Button} from "@mantine/core";
+import { sentenceCase } from 'change-case';
 
 type TextFieldProps = {
   label: string;
@@ -13,10 +15,7 @@ type TextFieldProps = {
 
 const TextSectionField = (props: TextFieldProps) => {
   return (
-    <div>
-      <label>{props.label}</label>
-      <input value={props.value} onChange={(e) => props.onChange(e.target.value)} />
-    </div>
+    <TextInput label={props.label} value={props.value} onChange={e => props.onChange(e.target.value)} />
   );
 };
 
@@ -44,6 +43,11 @@ const postIntroSection: SectionDescriptor<PostIntroDict> = {
     author: sectionField(TextSectionField, { label: 'Author' }),
     content: sectionField(TextSectionField, { label: 'Content' }),
   },
+  defaults: {
+    title: 'Something awesome!',
+    author: 'Someone awesome!',
+    content: 'Hello world!!!!',
+  }
 };
 
 type TextWithImageSection = {
@@ -55,7 +59,7 @@ const textWithImage: SectionDescriptor<TextWithImageSection> = {
   name: 'text-with-image',
   component: (props) => (
     <div>
-      <img src={props.image} />
+      <img src={props.image} style={{ maxWidth: '100%' }} />
 
       <p>{props.content}</p>
     </div>
@@ -64,6 +68,10 @@ const textWithImage: SectionDescriptor<TextWithImageSection> = {
     image: sectionField(TextSectionField, { label: 'Image URL' }),
     content: sectionField(TextSectionField, { label: 'Content' })
   },
+  defaults: {
+    image: 'http://placekitten.com/g/1080/1080',
+    content: 'Hello world',
+  }
 };
 
 const usePostTemplate = createTemplate([
@@ -95,25 +103,41 @@ function App() {
     },
   ]);
 
-  const [sections, forms] = usePostTemplate(sectionDatas, setSectionDatas);
+  const [sections, fieldSets, { generate }] = usePostTemplate(sectionDatas, setSectionDatas);
 
   return (
-    <div className="App" style={{ display: 'flex' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        {forms.map((form) => (
-          <div style={{ display: 'inline-block' }}>
-            {form}
-            <br />
-            <br />
-          </div>
-        ))}
-      </div>
+    <Grid>
+      <Grid.Col span={3}>
+        <Group direction="column" align="center" spacing="1.5rem" sx={{ padding: '1rem', maxHeight: '100vh', overflowY: 'auto', flexWrap: 'nowrap' }}>
+          {fieldSets.map((fields, index) => (
+            <Paper padding="md" shadow="xs" radius="1rem" sx={{ width: '100%' }}>
+              <Text size="sm" transform="uppercase" weight="bold" color="gray" sx={{ letterSpacing: '0.5px', marginBottom: '1rem' }}>
+                #{index + 1}: {sentenceCase(sectionDatas[index].type)}
+              </Text>
 
-      <main style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-        {sections}
-      </main>
-    </div>
-  )
+              <Group direction="column" align="stretch">
+                {fields}
+              </Group>
+            </Paper>
+          ))}
+
+          <Button onClick={() => addSection(generate('text-with-image'))} sx={{ flexShrink: 0 }}>
+            Add text with image
+          </Button>
+        </Group>
+      </Grid.Col>
+
+      <Grid.Col span={9} sx={{ backgroundColor: 'white' }}>
+        <Group direction="column" sx={{ maxHeight: '100vh', overflowY: 'auto', flexWrap: 'nowrap' }}>
+          {sections}
+        </Group>
+      </Grid.Col>
+    </Grid>
+  );
+
+  function addSection(section: typeof sectionDatas[number]) {
+    setSectionDatas((current) => [...current, section]);
+  }
 }
 
 export default App

@@ -22,4 +22,5 @@ export type SectionDescriptor<Data = any> = {
   name: string;
   fields: Record<keyof Data, FunctionComponent<SectionFieldProps>>;
   component: FunctionComponent<Data>;
+  defaults: Data;
 }
