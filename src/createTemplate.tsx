@@ -1,4 +1,3 @@
-import {ComponentProps, FunctionComponent} from "react";
 import {SectionDescriptor, FieldComponentsMap, SectionBaseDescriptor} from "./sectionField";
 
 type SectionDataExtras = { id: number; type: string; };
