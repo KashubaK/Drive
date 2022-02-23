@@ -1,5 +1,5 @@
 import {Group, Text, useMantineTheme} from "@mantine/core";
-import {GiSteeringWheel} from "react-icons/all";
+import {GiSteeringWheel} from "react-icons/gi";
 
 export type PageTitleProps = {
   title: string;

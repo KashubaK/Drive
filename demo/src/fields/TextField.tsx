@@ -1,6 +1,6 @@
 import {TextInput, TextInputProps} from "@mantine/core";
 
-type TextFieldProps = Omit<TextInputProps, 'onChange' | 'value'> & {
+export type TextFieldProps = Omit<TextInputProps, 'onChange' | 'value'> & {
   value: string;
   onChange: (value: string) => void;
 };
