@@ -2,6 +2,7 @@ import {Container} from "@mantine/core";
 import {TemplateSections} from "../../../src/createTemplate";
 import {pageTitleBase} from "../sections/pageTitle";
 import {tutorialSectionBase} from "../sections/tutorial";
+import dedent from "dedent";
 
 export function Home() {
   const sections = [
@@ -21,7 +22,126 @@ export function Home() {
       id: 1,
       type: 'tutorial',
       title: 'See Drive in action.',
-      steps: [],
+      steps: [
+        {
+          heading: 'Start with the content.',
+          subtext: 'What does it look like? What data does it need?',
+          code: dedent`
+            // You'll need this props type later. 
+            export type HeadingWithParagraphProps = {
+              heading: string;
+              content: string;
+            }
+            
+            function HeadingWithParagraph({ heading, content }: HeadingWithParagraphProps) {
+              return (
+                <section>
+                  <h2>{heading}</h2>
+                  <p>{content}</p>
+                </section>
+              );
+            }
+          `,
+        },
+        {
+          heading: 'Define a field that can provide data for your content.',
+          subtext: 'Fields need to accept \'value\' and \'onChange\' props.',
+          code: dedent`
+            type TextFieldProps = {
+              label: string;
+              value: string;
+              onChange: (value: string) => void;
+            }
+            
+            export function TextField({ label, value, onChange }: TextFieldProps) {
+              return (
+                <div className="TextField">
+                  <label>{label}</label>
+                  <input value={value} onChange={e => onChange(e.target.value)} />
+                </div>
+              );
+            }
+          `,
+        },
+        {
+          heading: 'Model your content with a Drive section.',
+          subtext: dedent`
+            TextField can consume and propagate a string value, and HeadingWithParagraph needs strings for its props.
+            Coincidence? I think not! If you're using TypeScript, it will make sure only compatible fields can be
+            connected to the right props.
+          `,
+          code: dedent`
+            import { sectionField, SectionDescriptor } from 'drive';
+            
+            const textWithParagraphSection: SectionDescriptor<HeadingWithParagraphProps> = {
+              id: 'heading-with-paragraph',
+              name: 'Heading with paragraph',
+              component: HeadingWithParagraph,
+              fields: {
+                heading: sectionField(TextField, { label: 'Heading' }),
+                content: sectionField(TextField, { label: 'Content' })
+              },
+              defaults: {
+                heading: 'New content block',
+                content: 'Lorem ipsum sit dolor amet...'
+              },
+            };
+          `,
+        },
+        {
+          heading: 'Tie your section into a template editor.',
+          subtext: dedent`
+            It's all coming together. Pull your data from wherever you want, and provide Drive a way to push changes.
+          `,
+          code: dedent`
+            import { createTemplate } from 'drive';
+          
+            const useTemplate = createTemplate([
+              textWithParagraphSection,
+            ]);
+            
+            export function Editor() {
+              const [sectionData, setSectionData] = useState([
+                {
+                  id: 0,
+                  type: 'text-with-paragraph',
+                  heading: 'Check me out!',
+                  content: 'Lorem ipsum sit dolor amet...',
+                }
+              ]);
+              
+              const [sections, sectionForms] = useTemplate(sectionData, setSectionData);
+              
+              return (
+                <div className="Editor">
+                  <div className="EditorForms">
+                    {sectionForms.map((fields) => (
+                      /*
+                        \`fields\` contains markup for each field rendered by a section.
+                        
+                        It looks like this:
+                        
+                        <>
+                          <TextField label="Heading" value="Check me out!" onChange={...} />
+                          <TextField label="Content" value="Lorem ipsum sit dolor amet..." onChange={...} />
+                        </>
+                      */
+                      
+                      <form className="EditorForm">
+                        {fields}
+                      </form>
+                    )}
+                  </div>
+                  
+                  <div className="EditorSections">
+                    {sections}
+                  </div>
+                </div>
+              );
+            }
+          `,
+        },
+      ],
     }
   ];
 
