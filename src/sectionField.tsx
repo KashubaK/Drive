@@ -5,14 +5,13 @@ export type SectionFieldProps<Value = string> = {
   onChange: (value: Value) => void;
 }
 
-type ProvidedProps = keyof SectionFieldProps;
-
-export function sectionField<
-  ComponentType extends FunctionComponent<SectionFieldProps>,
-  FieldValue = ComponentProps<ComponentType>['value']
->(Component: ComponentType, defaultProps: Omit<ComponentProps<ComponentType>, ProvidedProps>) {
-  return (sectionFieldProps: SectionFieldProps) => {
-    return <Component {...defaultProps} {...sectionFieldProps} />
+// TOOD: Types here are busted. The Component could potentially not support the `value` prop coming from SectionFieldProps.
+export function sectionField<Props extends SectionFieldProps>(
+  Component: (props: Props) => JSX.Element,
+  defaultProps: Omit<Props, keyof SectionFieldProps>,
+) {
+  return (props: Props) => {
+    return <Component {...props} {...defaultProps} />
   }
 }
 

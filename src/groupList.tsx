@@ -1,4 +1,4 @@
-import {FieldComponentsMap, SectionFieldProps} from "./createSection";
+import {FieldComponentsMap, SectionFieldProps} from "./sectionField";
 import {SectionFields} from "./createTemplate";
 import { set } from 'lodash-es';
 
