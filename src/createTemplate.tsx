@@ -1,14 +1,17 @@
 import {ComponentProps, FunctionComponent} from "react";
-import {SectionDescriptor} from "./hooks/useSection";
+import {SectionDescriptor, FieldComponentsMap, SectionBaseDescriptor} from "./sectionField";
 
+type SectionDataExtras = { id: number; type: string; };
 
-export function createTemplate<Sections extends SectionDescriptor[]>(sections: Sections) {
+export function createTemplate<
+  Section extends SectionDescriptor,
+>(sections: Section[]) {
   return (
-    sectionDatas: (ComponentProps<Sections[number]['component']> & { id: number; type: string; })[],
+    sectionDatas: (typeof sections[number]["defaults"] & SectionDataExtras)[],
     onSectionDatasChange: (newSectionDatas: typeof sectionDatas) => void,
   ) => {
-    const generate = (type: (typeof sectionDatas)[number]['type']): any => {
-      const section = sections.find(s => s.name === type);
+    const generate = (type: string): typeof sectionDatas[number] => {
+      const section = sections.find(s => s.id === type);
       if (!section) {
         throw new Error(`Cannot resolve section "${type}"`);
       }
@@ -22,7 +25,7 @@ export function createTemplate<Sections extends SectionDescriptor[]>(sections: S
     }
 
     const rendered = sectionDatas.map((sectionData, sectionIndex) => {
-      const section = sections.find((section) => section.name === sectionData.type);
+      const section = sections.find((section) => section.id === sectionData.type);
 
       if (!section) {
         throw new Error(`Template missing section type: ${sectionData.type}`);
@@ -35,9 +38,10 @@ export function createTemplate<Sections extends SectionDescriptor[]>(sections: S
 
         onSectionDatasChange(updatedSections);
       }
+
       return [
         <section.component key={`section-${sectionData.id}`} {...sectionData} />,
-        <SectionFields key={`sectionForm-${sectionData.id}`} section={section} data={sectionData} onChange={handleChange} />,
+        <SectionFields key={`sectionForm-${sectionData.id}`} fields={section.fields} data={sectionData} onChange={handleChange} />,
       ];
     });
 
@@ -49,14 +53,14 @@ export function createTemplate<Sections extends SectionDescriptor[]>(sections: S
   }
 }
 
-type SectionFieldsProps = {
-  section: SectionDescriptor;
-  data: any;
-  onChange: (sectionData: any) => void;
+type SectionFieldsProps<Data = any> = {
+  fields: FieldComponentsMap;
+  data: Data;
+  onChange: (data: Data) => void;
 }
 
-function SectionFields(props: SectionFieldsProps) {
-  const fields = Object.entries(props.section.fields).map(([key, Field]) => (
+export function SectionFields(props: SectionFieldsProps) {
+  const fields = Object.entries(props.fields).map(([key, Field]) => (
     <Field value={props.data[key]} onChange={(value) => props.onChange({ ...props.data, [key]: value })} />
   ));
 
@@ -65,4 +69,27 @@ function SectionFields(props: SectionFieldsProps) {
       {fields}
     </>
   )
+}
+
+type TemplateSectionsProps = {
+  sections: SectionBaseDescriptor[];
+  datas: (SectionDataExtras & Record<string, any>)[]
+}
+
+export function TemplateSections(props: TemplateSectionsProps) {
+  const { sections, datas } = props;
+
+  return (
+    <>
+      {datas.map((data) => {
+        const section = sections.find((s) => s.id === data.type);
+        if (!section) {
+          console.warn(`Could not find section with id "${data.type}"`);
+          return;
+        }
+
+        return <section.component key={`${section.id}#${data.id}`} {...data} />
+      }).filter(Boolean)}
+    </>
+  );
 }
