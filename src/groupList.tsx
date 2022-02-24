@@ -1,5 +1,5 @@
 import {FieldComponentsMap, SectionFieldProps} from "./sectionField";
-import {SectionFields} from "./createTemplate";
+import {SectionFields} from "./components/SectionFields";
 import { set } from 'lodash-es';
 
 type GroupListOpts<Data = any> = {
