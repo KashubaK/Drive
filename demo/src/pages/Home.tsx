@@ -1,8 +1,9 @@
-import {Container} from "@mantine/core";
+import {Button, Container, Group} from "@mantine/core";
 import {TemplateSections} from "../../../src/createTemplate";
 import {pageTitleBase} from "../sections/pageTitle";
 import {tutorialSectionBase} from "../sections/tutorial";
 import dedent from "dedent";
+import {Link} from "react-router-dom";
 
 export const homeData = [
   {
@@ -148,6 +149,19 @@ export function Home() {
   return (
     <Container size="xl">
       <TemplateSections sections={[pageTitleBase, tutorialSectionBase]} datas={homeData} />
+
+      <Group my={50}>
+        <Button
+          component={Link}
+          to="/editor"
+          size="xl"
+          variant="gradient"
+          gradient={{ from: 'blue', to: 'green' }}
+          sx={{ fontSize: '1.6rem' }}
+        >
+          Edit this page
+        </Button>
+      </Group>
     </Container>
   )
 }

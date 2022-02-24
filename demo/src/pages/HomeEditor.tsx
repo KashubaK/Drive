@@ -2,7 +2,7 @@ import {createTemplate} from "../../../src";
 import {pageTitleSection} from "../sections/pageTitle";
 import {tutorialSection} from "../sections/tutorial";
 import {homeData} from "./Home";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Box, Container, Grid, Group, Paper} from "@mantine/core";
 import {SectionForm} from "../editor/SectionForm";
 
@@ -16,6 +16,12 @@ const useHomeTemplateEditor = createTemplate(sections);
 export function HomeEditor() {
   const [data, setData] = useState(homeData);
   const [components, sectionForms] = useHomeTemplateEditor(data, setData);
+
+  // Hack. Feels redundant, but otherwise when you click "Edit this page" at the bottom of the homepage,
+  // it stays stuck to the bottom.
+  useEffect(() => {
+    document.scrollingElement?.scrollTo({ top: 0 });
+  }, []);
 
   return (
     <Box>
