@@ -4,29 +4,28 @@ import {pageTitleBase} from "../sections/pageTitle";
 import {tutorialSectionBase} from "../sections/tutorial";
 import dedent from "dedent";
 
-export function Home() {
-  const sections = [
-    {
-      id: 0,
-      type: 'page-title',
-      title: 'Drive data into your components.',
-      subtext: `
-        Don't pay for a CMS just to get a nice editor. Describe your data model using React components, build the
-        editing experience you need, and let Drive connect the dots.
-        
-        You own all the markup, we don't inject anything extra. We know everyone has their own needs, and it's our
-        mission to not get in the way.
-      `,
-    },
-    {
-      id: 1,
-      type: 'tutorial',
-      title: 'See Drive in action.',
-      steps: [
-        {
-          heading: 'Start with the content.',
-          subtext: 'What does it look like? What data does it need?',
-          code: dedent`
+export const homeData = [
+  {
+    id: 0,
+    type: 'page-title',
+    title: 'Drive data into your components.',
+    subtext: `
+      Don't pay for a CMS just to get a nice editor. Describe your data model using React components, build the
+      editing experience you need, and let Drive connect the dots.
+      
+      You own all the markup, we don't inject anything extra. We know everyone has their own needs, and it's our
+      mission to not get in the way.
+    `,
+  },
+  {
+    id: 1,
+    type: 'tutorial',
+    title: 'See Drive in action.',
+    steps: [
+      {
+        heading: 'Start with the content.',
+        subtext: 'What does it look like? What data does it need?',
+        code: dedent`
             // You'll need this props type later. 
             export type HeadingWithParagraphProps = {
               heading: string;
@@ -42,11 +41,11 @@ export function Home() {
               );
             }
           `,
-        },
-        {
-          heading: 'Define a field that can provide data for your content.',
-          subtext: 'Fields need to accept \'value\' and \'onChange\' props.',
-          code: dedent`
+      },
+      {
+        heading: 'Define a field that can provide data for your content.',
+        subtext: 'Fields need to accept \'value\' and \'onChange\' props.',
+        code: dedent`
             type TextFieldProps = {
               label: string;
               value: string;
@@ -62,15 +61,15 @@ export function Home() {
               );
             }
           `,
-        },
-        {
-          heading: 'Model your content with a Drive section.',
-          subtext: dedent`
+      },
+      {
+        heading: 'Model your content with a Drive section.',
+        subtext: dedent`
             TextField can consume and propagate a string value, and HeadingWithParagraph needs strings for its props.
             Coincidence? I think not! If you're using TypeScript, it will make sure only compatible fields can be
             connected to the right props.
           `,
-          code: dedent`
+      code: dedent`
             import { sectionField, SectionDescriptor } from 'drive';
             
             const textWithParagraphSection: SectionDescriptor<HeadingWithParagraphProps> = {
@@ -87,13 +86,13 @@ export function Home() {
               },
             };
           `,
-        },
-        {
-          heading: 'Tie your section into a template editor.',
-          subtext: dedent`
+      },
+      {
+        heading: 'Tie your section into a template editor.',
+        subtext: dedent`
             It's all coming together. Pull your data from wherever you want, and provide Drive a way to push changes.
           `,
-          code: dedent`
+      code: dedent`
             import { createTemplate } from 'drive';
           
             const useTemplate = createTemplate([
@@ -140,14 +139,15 @@ export function Home() {
               );
             }
           `,
-        },
-      ],
-    }
-  ];
+      },
+    ],
+  }
+]
 
+export function Home() {
   return (
     <Container size="xl">
-      <TemplateSections sections={[pageTitleBase, tutorialSectionBase]} datas={sections} />
+      <TemplateSections sections={[pageTitleBase, tutorialSectionBase]} datas={homeData} />
     </Container>
   )
 }

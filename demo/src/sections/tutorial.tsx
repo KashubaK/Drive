@@ -3,6 +3,7 @@ import {Tutorial, TutorialProps} from "../components/Tutorial";
 import {TextField} from "../fields/TextField";
 import {groupList} from "../../../src/groupList";
 import {TutorialStepProps} from "../components/TutorialStep";
+import {SectionGroupList} from "../editor/SectionGroupList";
 
 export const tutorialSectionBase = {
   id: 'tutorial',
@@ -15,11 +16,7 @@ export const tutorialSection: SectionDescriptor<TutorialProps> = {
   fields: {
     title: sectionField(TextField, { label: 'Title' }),
     steps: groupList<TutorialStepProps>({
-      renderGroup: (fields) => (
-        <form style={{ marginLeft: '1rem' }}>
-          {fields}
-        </form>
-      ),
+      render: ({ blocks }) => <SectionGroupList blocks={blocks} label="Steps" />,
       fields: {
         heading: sectionField(TextField, { label: 'Heading' }),
         subtext: sectionField(TextField, { label: 'Sub-text' }),

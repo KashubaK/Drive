@@ -1,6 +1,5 @@
 import {Group, Text} from "@mantine/core";
 import {TutorialStep} from "./TutorialStep";
-import dedent from "dedent";
 
 export type TutorialStep = {
   heading: string;
