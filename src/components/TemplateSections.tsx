@@ -1,5 +1,5 @@
 import {SectionBaseDescriptor} from "../sectionField";
-import {SectionDataExtras} from "../createSectionEditor";
+import {SectionDataExtras} from "../hooks/useSectionEditor";
 
 type TemplateSectionsProps = {
   sections: SectionBaseDescriptor[];

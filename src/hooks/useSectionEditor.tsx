@@ -1,6 +1,6 @@
-import {SectionDescriptor} from "./sectionField";
+import {SectionDescriptor} from "../sectionField";
 import {FunctionComponent, useCallback, Dispatch, SetStateAction } from "react";
-import {SectionFields} from "./components/SectionFields";
+import {SectionFields} from "../components/SectionFields";
 
 export type SectionDataExtras = { id: number; type: string; };
 
